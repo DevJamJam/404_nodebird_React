@@ -1,7 +1,7 @@
 import AppLayout from "../components/AppLayout";
 import Head from "next/head";
 import { Button, Checkbox, Form, Input } from "antd";
-import { useCallback, useState } from "react";
+import React,{ useCallback, useState } from "react";
 import useInput from "../hooks/useInput";
 import styled from "styled-components";
 

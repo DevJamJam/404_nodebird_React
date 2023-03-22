@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { Input, Menu, Row, Col } from "antd";
@@ -5,6 +6,9 @@ import {useSelector} from 'react-redux';
 
 import UserProfile from "../components/UserProfile";
 import LoginForm from "../components/LoginForm";
+import styled from 'styled-components';
+
+const SearchWrapper = styled(Input.Search)`vertical-align: middle`;
 
 const AppLayout = ({ children }) => {
   const isLoggedIn = useSelector((state)=>state.user.isLoggedIn);
@@ -22,7 +26,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <Input.Search style={{ verticalAlign: "middle" }} enterButton />
+          <SearchWrapper enterButton />
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup">
@@ -38,11 +42,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <a
-            href="https://github.com/developer-jamjam"
-            target="_blank"
-            rel="_noreferrer noopener"
-          >
+          <a href="https://sagongsa-404.tistory.com/" target="_blank" rel="noreferrer noopener">
             Made by SaGongSa
           </a>
         </Col>
