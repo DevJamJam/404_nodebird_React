@@ -6,33 +6,34 @@ import {useSelector} from 'react-redux';
 
 import UserProfile from "../components/UserProfile";
 import LoginForm from "../components/LoginForm";
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 const SearchWrapper = styled(Input.Search)`vertical-align: middle`;
 
+//gutter 설정으로 인한 가로 스크롤 생기는 부분 처리를 위해 글로벌 스타일 사용
+const Global = createGlobalStyle`
+  .ant-row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .ant-col:first-child {
+    padding-left: 0 !important;
+  }
+  .ant-col:last-child {
+    padding-right: 0 !improtant;
+  }
+`
 const AppLayout = ({ children }) => {
   const isLoggedIn = useSelector((state)=>state.user.isLoggedIn);
   return (
     <div>
+      <Global />
       <Menu mode="horizontal">
-        <Menu.Item>
-          <Link href="/">
-            <a>노드버드</a>
-          </Link>
-        </Menu.Item>
-        <Menu.Item>
-          <Link href="/profile">
-            <a>프로필</a>
-          </Link>
-        </Menu.Item>
-        <Menu.Item>
-          <SearchWrapper enterButton />
-        </Menu.Item>
-        <Menu.Item>
-          <Link href="/signup">
-            <a>회원가입</a>
-          </Link>
-        </Menu.Item>
+        <Menu.Item key="home"><Link href="/"><a>노드버드</a></Link></Menu.Item>
+        <Menu.Item key="profile"><Link href="/profile"><a>프로필</a></Link></Menu.Item>
+        <Menu.Item key="mail"><SearchWrapper enterButton /></Menu.Item>
+        <Menu.Item key="signup"><Link href="/signup"><a>회원가입</a></Link></Menu.Item>
       </Menu>
       <Row gutter={8}>
         <Col xs={24} md={6}>
