@@ -2,16 +2,26 @@ import { RetweetOutlined,HeartOutlined, MessageOutlined, EllipsisOutlined, Heart
 import { Avatar, Button, Card, Comment, List, Popover } from 'antd';
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 const PostCard = ({post}) => {
     const id = useSelector((state)=> state.user.me?.id); //옵셔널체이닝 연산자
+    const {removePostLoading} = useSelector((state)=>state.post);
+    const dispatch = useDispatch();
 
     const [liked, setLiked] = useState(false);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
+
+    const onRemovePost = useCallback(()=> {
+        dispatch({
+            type: REMOVE_POST_REQUEST,
+            data: post.id,
+        });
+    });
 
     const onToggleLike = useCallback(() => {
         setLiked((prev) => !prev); // 이전 데이터를 기반으로 반대값을 만들어 준다.
@@ -35,7 +45,11 @@ const PostCard = ({post}) => {
                             { id && post.User.id === id ? (
                                 <>
                                     <Button>수정</Button>
-                                    <Button type="danger">삭제</Button>
+                                    <Button 
+                                        type="danger" 
+                                        onClick={onRemovePost}
+                                        loading={removePostLoading}
+                                    >삭제</Button>
                                 </>
                             ) : 
                             <Button>신고</Button>}

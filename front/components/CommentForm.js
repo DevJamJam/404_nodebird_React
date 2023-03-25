@@ -1,15 +1,15 @@
 import { Button, Form, Input } from 'antd'
 import PropTypes from 'prop-types';
-import React,{ useCallback, useEffect } from 'react';
+import React , { useCallback, useEffect } from 'react';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { ADD_COMMENT_REQUEST } from '../reducers/post';
-import { setContext } from 'redux-saga/effects';
+
 
 const CommentForm = ({post}) => {
     const dispatch = useDispatch();
     const id = useSelector((state)=>state.user.me?.id);
-    const {addCommentDone} = useSelector((state)=> state.post);
+    const {addCommentDone, addCommentLoading} = useSelector((state)=> state.post);
 
     const [commentText,onChangeCommentText,setCommentText] = useInput('');
 
@@ -24,13 +24,19 @@ const CommentForm = ({post}) => {
         dispatch({
             type: ADD_COMMENT_REQUEST,
             data: { content: commentText, postId: post.id, userId: id}
+            // action.data.content , action.data.postId , action.data.userId => saga로 전달된다
         });
     },[commentText,id]);
     return(
         <Form onFinish={onSubmitComment}>
             <Form.Item style={{ position: 'relative', margin: 0}}>
                 <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
-                <Button style={{ position:'absolute', right: 0, bottom: -40 }} type="primary" htmlType="submit">뺙뺙</Button>
+                <Button 
+                    style={{ position:'absolute', right: 0, bottom: -40, zIndex: 1}} 
+                    type="primary" 
+                    htmlType="submit"
+                    loading={addCommentLoading}
+                >뺙뺙</Button>
             </Form.Item>
         </Form>
     )
