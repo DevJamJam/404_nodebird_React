@@ -8,8 +8,8 @@ import rootSaga from '../sagas';
 // logger를 찍는 middleware 구현 해보기 
 const loggerMiddleware = ({dispatch, getState}) => (next) => (action) => {
     console.log(action);
-    console.log("dispatch : " , dispatch) ;
-    console.log("getState : " , getState) ;
+    console.log("dispatch : " , dispatch);
+    console.log("getState : " , getState);
     return next(action);
 }
 
