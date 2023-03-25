@@ -7,6 +7,7 @@ import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
+import FollowButton from './FollowButton';
 
 const PostCard = ({post}) => {
     const id = useSelector((state)=> state.user.me?.id); //옵셔널체이닝 연산자
@@ -21,7 +22,7 @@ const PostCard = ({post}) => {
             type: REMOVE_POST_REQUEST,
             data: post.id,
         });
-    });
+    },[]);
 
     const onToggleLike = useCallback(() => {
         setLiked((prev) => !prev); // 이전 데이터를 기반으로 반대값을 만들어 준다.
@@ -58,6 +59,8 @@ const PostCard = ({post}) => {
                         <EllipsisOutlined />
                     </Popover>,
                 ]}
+                //만약 작성글 id 와 내 id가 같을땐 팔로워 Button 뜨지 않도록
+                extra={id && post.User.id !== id && <FollowButton post={post} />}
             >
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>} 
