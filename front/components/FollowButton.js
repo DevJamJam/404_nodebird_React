@@ -33,7 +33,14 @@ const FollowButton = ({post}) => {
 }
 
 FollowButton.propTypes = {
-    post: PropTypes.object.isRequired,
+    post: PropTypes.shape({
+        id: PropTypes.number,
+        User: PropTypes.object,
+        content: PropTypes.string,
+        createdAt: PropTypes.object,
+        Comments: PropTypes.arrayOf(PropTypes.object),
+        Images: PropTypes.arrayOf(PropTypes.object),
+    }).isRequired,
 }
 
 export default FollowButton;
