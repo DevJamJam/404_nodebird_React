@@ -18,7 +18,7 @@ const FollowButton = ({post}) => {
         } else {
             dispatch({
                 type: FOLLOW_REQUEST,
-                data: post.User.id
+                data: { id: post.User.id , nickname: post.User.nickname },
             })
         }
     },[isFollowing])

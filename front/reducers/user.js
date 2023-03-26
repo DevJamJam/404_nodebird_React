@@ -102,7 +102,7 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
             break;
         case FOLLOW_SUCCESS:
             draft.followLoading = false;
-            draft.me.Followings.push({ id: action.data });
+            draft.me.Followings.push({ id: action.data.id , nickname: action.data.nickname });
             draft.followDone = true;
             break;
         case FOLLOW_FAILURE:
