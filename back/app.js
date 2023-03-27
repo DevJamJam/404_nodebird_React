@@ -1,14 +1,43 @@
 const express = require('express');
+const cors = require('cors');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const dotenv = require('dotenv');
+
 const postRouter = require('./routes/post');
+const userRouter = require('./routes/user');
 const db = require('./models');
+const passportConfig = require('./passport');
 
+dotenv.config();
 const app = express(); //한번 호출 해주어야 한다.
-
 db.sequelize.sync()
     .then(()=> {
         console.log('db연결 성공');
     })
     .catch(console.error);
+
+passportConfig();
+
+app.use(cors({
+    origin: true, //모든 출처 허용 옵션 
+    credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션
+})); // CORS해결 
+app.use(express.json()); // json data넘어 올때 처리
+app.use(express.urlencoded({ extended: true })); //form submit해서 넘어올때 처리
+//Front에 들어온 데이터를 해석해서 req.body안에 넣어준다. 
+
+//cookie와 session을 위한 설정 
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 /*
     app.get => 가져오다
@@ -23,9 +52,6 @@ app.get('/',(req,res)=>{ // '/' url , get 메서드
     res.send('안녕! express');
 })
 
-app.get('/',(req,res)=>{ // '/api' url , get 메서드
-    res.send('안녕! api');
-})
 app.get('/posts',(req,res)=>{
     res.json([
         {id: 1, content: 'vervon'},
@@ -35,6 +61,7 @@ app.get('/posts',(req,res)=>{
 })
 
 app.use('/post',postRouter);
+app.use('/user',userRouter);
 
 app.listen(3065, () => {
     console.log('서버 실행 중 입니댜');

@@ -132,9 +132,6 @@ dist
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
-# sequelize
-config.json
-
 # vuepress build output
 .vuepress/dist
 
