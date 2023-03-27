@@ -1,23 +1,41 @@
-const http = require('http');
-const server = http.createServer((req,res)=>{
-    //요청에 대한 정보 req 
-    //응답에 대한 정보 res 
-    console.log(req.url, req.method);
-    res.write('Hello nodebirds');// 여러줄을 치고 싶다 => res.write()
-    res.end('Hello node'); //마지막에만 .. res.end() 
-    // () 안에 html도 넣을 수 있다. 
-});
-server.listen(3065,()=>{
-    console.log('서버는 실행중');
-});
+const express = require('express');
+const postRouter = require('./routes/post');
+const db = require('./models');
+
+const app = express(); //한번 호출 해주어야 한다.
+
+db.sequelize.sync()
+    .then(()=> {
+        console.log('db연결 성공');
+    })
+    .catch(console.error);
+
 /*
-    createServer라는 곳에서 요청메서드나 url에 따라서 응답을 해준다. 
-    프론트 서버나 브라우저가 요청을 보내면 응답을 해준다 => 서버 
-    요청 한번 당 응답 한번 , 아예 안보내도 안되고 무조건 요청을 보내야 한다.
-    응답을 안 보내면 특정시간 (30초정도)후에 브라우저가 자동으로 응답 실패로 처리해버린다.
-
-    요청과 응답은 1:1 .. 
-    응답 두번 보내지않게 조심해야 한다 res.end 2번 보내면 안된다. 
-
-    노드 자체가 서버 X , 노드 자체에서 제공하는 http 모듈이 서버 
+    app.get => 가져오다
+    app.post => 생성하다
+    app.put => 전체 수정
+    app.delete => 제거
+    app.patch => 부분수정
+    app.options => 찔러보기
+    app.head => 헤더만 가져오기 (헤더/바디)
 */
+app.get('/',(req,res)=>{ // '/' url , get 메서드
+    res.send('안녕! express');
+})
+
+app.get('/',(req,res)=>{ // '/api' url , get 메서드
+    res.send('안녕! api');
+})
+app.get('/posts',(req,res)=>{
+    res.json([
+        {id: 1, content: 'vervon'},
+        {id: 2, content: 'jin'},
+        {id: 3, content: 'vermouth'},
+    ]);
+})
+
+app.use('/post',postRouter);
+
+app.listen(3065, () => {
+    console.log('서버 실행 중 입니댜');
+})
