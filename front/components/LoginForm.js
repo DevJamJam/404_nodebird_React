@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import { useCallback } from "react";
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { loginRequestAction } from '../reducers/user';
+import Swal from 'sweetalert2';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -17,13 +18,23 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const {logInLoading} = useSelector((state)=>state.user);
+  const { logInLoading, logInError} = useSelector((state)=>state.user);
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
 
+  useEffect(()=> {
+    if (logInError) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: logInError,
+      });
+    }
+  },[logInError])
+
   const onSubmitForm = useCallback(() => {
     console.log(email, password);
-    dispatch(loginRequestAction(email,password));
+    dispatch(loginRequestAction({email,password}));
   }, [email, password]);
 
   return (
