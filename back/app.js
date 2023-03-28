@@ -4,8 +4,10 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const db = require('./models');
 const passportConfig = require('./passport');
@@ -20,9 +22,11 @@ db.sequelize.sync()
 
 passportConfig();
 
+app.use(morgan('dev'));
 app.use(cors({
-    origin: true, //모든 출처 허용 옵션 
-    credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션
+    origin: 'http://localhost:3000', //모든 출처 허용 옵션 , Access-Control-Allow-Origin 
+    // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
+    credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션 ,Access-Control-Allow-Credentials
 })); // CORS해결 
 app.use(express.json()); // json data넘어 올때 처리
 app.use(express.urlencoded({ extended: true })); //form submit해서 넘어올때 처리
@@ -52,16 +56,11 @@ app.get('/',(req,res)=>{ // '/' url , get 메서드
     res.send('안녕! express');
 })
 
-app.get('/posts',(req,res)=>{
-    res.json([
-        {id: 1, content: 'vervon'},
-        {id: 2, content: 'jin'},
-        {id: 3, content: 'vermouth'},
-    ]);
-})
-
-app.use('/post',postRouter);
 app.use('/user',userRouter);
+app.use('/post',postRouter);
+app.use('/posts',postsRouter);
+
+
 
 app.listen(3065, () => {
     console.log('서버 실행 중 입니댜');

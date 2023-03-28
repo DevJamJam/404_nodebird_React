@@ -5,13 +5,18 @@ import AppLayout from "../components/AppLayout";
 import PostCard from '../components/PostCard';
 import PostForm from '../components/PostForm';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state)=> state.user);
   // useSelector()사용 하여 가져온다. 사용자의 로그인 여부 
   const { mainPosts , hasMorePosts, loadPostsLoading } = useSelector((state)=>state.post);
+    
   useEffect(()=>{
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });

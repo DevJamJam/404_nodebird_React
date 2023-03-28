@@ -1,44 +1,8 @@
-import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker'
+
 
 export const initialState = {
-    mainPosts: [{
-        id: 1,
-        User:{
-            id:1,
-            nickname: '사공사',
-        },
-        content: '첫 번째 게시글 #해시태그 #익스프레쓰',
-        Images: [{
-            id: shortId.generate(),
-            src: 'https://images.unsplash.com/photo-1618183507099-4fa269f9b0ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80' 
-        },{
-            id: shortId.generate(),
-            src: 'https://images.unsplash.com/photo-1544241907-f3f1f5ded15a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'
-        },{
-            id: shortId.generate(),
-            src: 'https://images.unsplash.com/photo-1618183507099-4fa269f9b0ee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80' 
-        },{
-            id: shortId.generate(),
-            src: 'https://images.unsplash.com/photo-1544241907-f3f1f5ded15a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'
-        }],
-        Comments: [{
-            id: shortId.generate(),
-            User: {
-                id: shortId.generate(),
-                nickname: '버본',
-            },
-            content: '오 이제 시작인가?',
-        },{
-            id: shortId.generate(),
-            User: {
-                id: shortId.generate(),
-                nickname: '베르무트',
-            },
-            content: 'a secret makes a woman woman',
-        }]
-    }],
+    mainPosts: [],
     imagePaths: [],
     hasMorePosts: true,
     loadPostsLoading: false,
@@ -54,25 +18,6 @@ export const initialState = {
     addCommentDone: false,
     addCommentError: null,
 }
-
-export const generateDummyPost = (number) =>  Array(number).fill().map(()=> ({
-    id: shortId.generate(),
-    User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName()
-    },
-    content: faker.lorem.paragraph(),
-    Images: [{
-        src: faker.image.image(),
-    }],
-    Comment: [{
-        User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName()
-        },
-        content: faker.lorem.sentence(),
-    }],
-}));
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -103,25 +48,7 @@ export const addComment =(data) =>  ({
     data,
 });
 
-const dummyPost = (data) => ({
-    id: data.id,
-    content: data.content ,
-    User: {
-        id: 1,
-        nickname: '사공사',
-    },
-    Images: [],
-    Comments:[],
-});
 
-const dummyComment = (data) => ({
-    id: shortId.generate(),
-    content: data,
-    User: {
-        id: 1,
-        nickname: '사공사',
-    },
-});
 
 const reducer = (state= initialState, action) => produce(state, (draft)=> {
     switch (action.type) {
@@ -148,7 +75,7 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
         case ADD_POST_SUCCESS:
             draft.addPostLoading = false;
             draft.addPostDone = true;
-            draft.mainPosts.unshift(dummyPost(action.data));
+            draft.mainPosts.unshift(action.data);
             break;
         case ADD_POST_FAILURE:
             draft.addPostLoading = false;
@@ -175,8 +102,10 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
             break;
         case ADD_COMMENT_SUCCESS: 
             // action.data.content , postId,userId 사가에서 전달받아온다.\
-            const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-            post.Comments.unshift(dummyComment(action.data.content));
+            const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+            console.log(action.data);
+            debugger;
+            post.Comments.unshift(action.data)
             draft.addCommentLoading = false;
             draft.addCommentDone = true;
             break;
