@@ -102,10 +102,27 @@ router.post('/', isNotLoggedIn ,async (req, res, next) => { //POST /user
     }
 });
 
-router.post('/logout', isLoggedIn ,(req,res)=> {
-    req.logout();
-    req.session.destroy();
-    res.status(200).send('ok');
+router.post('/logout', isLoggedIn ,(req,res,next)=> { //passport 버전에 따른 코드 수정 
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        req.session.destroy();
+        res.redirect('/');
+    })
 });
+
+router.patch('/nickname', isLoggedIn, async(req,res,next)=> {
+    try{
+        //수정할땐 update
+        User.update({ //첫번째 객체 : 무엇을 수정할지 , 두번째 객체 : 누구꺼? 
+            nickname: req.body.nickname,
+        }, {
+            where: { id: req.user.id},
+        }); // 내  Id 의 닉네임을 프론트에서 받은 닉네임으로 수정한다 ! 
+        res.status(200).json({ nickname: req.body.nickname});
+    } catch(error) {
+        console.log(error);
+        next(error);
+    }
+})
 
 module.exports = router;

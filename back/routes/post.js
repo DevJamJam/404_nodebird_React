@@ -17,12 +17,16 @@ router.post('/', isLoggedIn, async (req,res,next)=>{  // await붙여주면 async
             },{
                 model: Comment,
                 include: [{
-                    model: User,
+                    model: User, //댓글 작성자
                     attributes: ['id','nickname'],
                 }]
             },{
-                model: User,
+                model: User, // 게시글 작성자 
                 attributes: ['id','nickname']
+            },{
+                model: User, //좋아요 누른 사람
+                as: 'Likers',
+                attributes: ['id'],
             }]
         })
         res.status(201).json(fullPost);
@@ -59,10 +63,49 @@ router.post('/:postId/comment', isLoggedIn, async(req,res,next)=> { //주소 부
         console.error(error);
         next(error);
     }
-})
+});
 
-router.delete('/',(req,res)=>{
-    res.json([{id:3, content: 'vervon'}]);
+router.patch('/:postId/like', isLoggedIn, async(req,res,next)=> { //PATCH  /post/1/like like
+    try {
+        const post = await Post.findOne({ where: {id: req.params.postId }});
+        if (!post) {
+            return res.status(403).send('존재하지 않는 게시글 입니다');
+        }
+        await post.addLikers(req.user.id);
+        res.json({ PostId: post.id , UserId: req.user.id});
+    } catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/:postId/like', isLoggedIn ,async(req,res,next)=> { //DELETE /post/1/like unlike
+    try {
+        const post = await Post.findOne({ where: {id: req.params.postId }});
+        if (!post) {
+            return res.status(403).send('존재하지 않는 게시글 입니다');
+        }
+        await post.removeLikers(req.user.id);
+        res.json({ PostId: post.id , UserId: req.user.id});
+    } catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/:postId', isLoggedIn ,async(req,res,next)=>{
+    try {
+        await Post.destroy({ //삭제할땐 destroy 
+            where: {
+                id: req.params.postId,
+                UserId: req.user.id,
+            },
+        });
+        res.status(200).json({PostId: parseInt(req.params.postId,10)}); //params 값은 문자열 ..숫자로 변환
+    } catch(error) {
+        console.error(error);
+        next(error);
+    }
 })
 
 

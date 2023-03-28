@@ -66,25 +66,7 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
     => 그러니 action을 만들어 주자! 그리고 post 사가에서 해당 action을 호출! 
 
 */
-const dummyUser = (data) => ({
-    ...data,
-    nickname: '사공사',
-    id: 1,
-    Posts: [{id: 1}],
-    Followings: [
-        { nickname: "버본" },
-        { nickname: "베르무트" },
-        { nickname: "진" },
-        { nickname: "공사버드오피셜" },
-    ],
-    Followers: [
-        { nickname: "버본" },
-        { nickname: "베르무트" },
-        { nickname: "진" },
-        { nickname: "아카이슈이치" },
-        { nickname: "공사버드오피셜" },
-    ],
-})
+
 // action creator
 export const loginRequestAction = (data) => {
     return {
@@ -191,6 +173,7 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
             draft.changeNicknameDone = false;
             break;
         case CHANGE_NICKNAME_SUCCESS:
+            draft.me.nickname = action.data.nickname;
             draft.changeNicknameLoading = false;
             draft.changeNicknameDone = true;
             break;
@@ -209,7 +192,7 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
             //   },
             // };
         case REMOVE_POST_OF_ME:
-            draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+            draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data.PostId);
             break;
             // return {
             //   ...state,

@@ -8,12 +8,18 @@ import {
     ADD_POST_FAILURE,
     ADD_POST_REQUEST,
     ADD_POST_SUCCESS, 
+    LIKE_POST_FAILURE, 
+    LIKE_POST_REQUEST, 
+    LIKE_POST_SUCCESS, 
     LOAD_POSTS_FAILURE, 
     LOAD_POSTS_REQUEST, 
     LOAD_POSTS_SUCCESS, 
     REMOVE_POST_FAILURE,
     REMOVE_POST_REQUEST,
-    REMOVE_POST_SUCCESS 
+    REMOVE_POST_SUCCESS, 
+    UNLIKE_POST_FAILURE, 
+    UNLIKE_POST_REQUEST,
+    UNLIKE_POST_SUCCESS
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -31,6 +37,44 @@ function* loadPosts(action) {
   } catch(err) {
       yield put({
         type: LOAD_POSTS_FAILURE,
+        error: err.response.data,
+      });
+  }
+}
+
+function likePostAPI(data) {
+  return axios.patch(`/post/${data}/like`); 
+}
+
+function* likePost(action) {
+  try {
+      const result = yield call(likePostAPI, action.data);
+      yield put({
+        type: LIKE_POST_SUCCESS,
+        data: result.data,
+      });
+  } catch(err) {
+      yield put({
+        type: LIKE_POST_FAILURE,
+        error: err.response.data,
+      });
+  }
+}
+function unLikePostAPI(data) {
+  return axios.delete(`/post/${data}/like`); 
+}
+
+function* unLikePost(action) {
+  try {
+      const result = yield call(unLikePostAPI, action.data);
+      yield put({
+        type: UNLIKE_POST_SUCCESS,
+        data: result.data,
+      });
+  } catch(err) {
+      console.error(err);
+      yield put({
+        type: UNLIKE_POST_FAILURE,
         error: err.response.data,
       });
   }
@@ -60,22 +104,21 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-  return axios.delete('/api/post',data);
+  return axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
   try {
-      // const result = yield call(removePostAPI, action.data);
-      yield delay(1000);
+      const result = yield call(removePostAPI,action.data);
       //post 리듀서 조작
       yield put({
         type: REMOVE_POST_SUCCESS,
-        data: action.data,
+        data: result.data,
       });
       //user 리듀서 조작 
       yield put({
         type: REMOVE_POST_OF_ME,
-        data: action.data,
+        data: result.data,
       })
   } catch(err) {
       yield put({
@@ -109,6 +152,14 @@ function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
 
+function* watchLikePost() {
+  yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+function* watchUnLikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unLikePost);
+}
+
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -124,6 +175,8 @@ function* watchAddComment() {
 export default function* postSaga() {
     yield all([
         fork(watchLoadPosts),
+        fork(watchLikePost),
+        fork(watchUnLikePost),
         fork(watchAddPost),
         fork(watchRemovePost),
         fork(watchAddComment),
