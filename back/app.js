@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
@@ -28,6 +29,8 @@ app.use(cors({
     // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
     credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션 ,Access-Control-Allow-Credentials
 })); // CORS해결 
+
+app.use('/',express.static(path.join(__dirname, 'uploads'))); 
 app.use(express.json()); // json data넘어 올때 처리
 app.use(express.urlencoded({ extended: true })); //form submit해서 넘어올때 처리
 //Front에 들어온 데이터를 해석해서 req.body안에 넣어준다. 
