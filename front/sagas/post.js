@@ -17,6 +17,9 @@ import {
     REMOVE_POST_FAILURE,
     REMOVE_POST_REQUEST,
     REMOVE_POST_SUCCESS, 
+    RETWEET_FAILURE, 
+    RETWEET_REQUEST, 
+    RETWEET_SUCCESS, 
     UNLIKE_POST_FAILURE, 
     UNLIKE_POST_REQUEST,
     UNLIKE_POST_SUCCESS,
@@ -26,13 +29,14 @@ import {
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
-function loadPostsAPI(data) {
-  return axios.get('/posts',data);
+function loadPostsAPI(lastId) {
+  return axios.get(`/posts?lastId=${lastId || 0 }`);
+  // get방식은 data를 넣으려면 쿼리스트링 사용 , 주소뒤에 ? key=value 형식 구분은 & 
 }
 
 function* loadPosts(action) {
   try {
-      const result = yield call(loadPostsAPI, action.data);
+      const result = yield call(loadPostsAPI, action.lastId);
       yield put({
         type: LOAD_POSTS_SUCCESS,
         data: result.data,
@@ -60,6 +64,27 @@ function* uploadImages(action) {
     console.error(err);
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function retweetAPI(data) {
+  return axios.post(`/post/${data}/retweet`);
+}
+
+function* retweet(action) {
+  try {
+    console.log(action.data);
+    const result = yield call(retweetAPI, action.data);
+    yield put({
+      type: RETWEET_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: RETWEET_FAILURE,
       error: err.response.data,
     });
   }
@@ -179,6 +204,10 @@ function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
+}
+
 function* watchLikePost() {
   yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
@@ -203,6 +232,7 @@ export default function* postSaga() {
     yield all([
         fork(watchLoadPosts),
         fork(watchUploadImages),
+        fork(watchRetweet),
         fork(watchLikePost),
         fork(watchUnLikePost),
         fork(watchAddPost),

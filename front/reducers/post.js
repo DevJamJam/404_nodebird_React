@@ -26,6 +26,9 @@ export const initialState = {
     uploadImagesLoading: false,
     uploadImagesDone: false,
     uploadImagesError: null,
+    retweetLoading: false,
+    retweetDone: false,
+    retweetError: null,
 }
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
@@ -56,6 +59,10 @@ export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
 export const REMOVE_IMAGE = 'REMOVE_IMAGE'; //동기 Action 하나만 만들면 된다.
 
 export const addPost =(data) =>  ({
@@ -81,11 +88,26 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
             draft.loadPostsLoading = false;
             draft.loadPostsDone = true;
             draft.mainPosts = draft.mainPosts.concat(action.data);
-            draft.hasMorePosts = draft.mainPosts.length < 50;
+            draft.hasMorePosts = draft.mainPosts.length === 10;
             break;
         case LOAD_POSTS_FAILURE:
             draft.loadPostsLoading = false;
             draft.loadPostsError = action.error;
+            break;
+        case RETWEET_REQUEST:
+            draft.retweetLoading = true;
+            draft.retweetDone = false;
+            draft.retweetError = null;
+            break;
+        case RETWEET_SUCCESS: {
+            draft.retweetLoading = false;
+            draft.retweetDone = true;
+            draft.mainPosts.unshift(action.data);
+            break;
+        }
+        case RETWEET_FAILURE:
+            draft.retweetLoading = false;
+            draft.retweetError = action.error;
             break;
         case LIKE_POST_REQUEST:
             draft.likePostLoading = true;
