@@ -7,6 +7,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
 router.get('/', async(req,res,next)=> { //GET /user
+    console.log(req.headers);
     try {
         if (req.user) {
             const fullUserWithoutPassword = await User.findOne({
@@ -35,7 +36,43 @@ router.get('/', async(req,res,next)=> { //GET /user
         console.error(error);
         next(error);
     }
-})
+});
+
+router.get('/:userId', async(req,res,next)=> { //GET /user/id
+    console.log(req.params.userId);
+    try {
+        const fullUserWithoutPassword = await User.findOne({
+            where: { id: req.params.userId },
+            attributes: {
+                exclude: ['password']
+            },
+            include: [{
+                model: Post,
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: 'Followings',
+                attributes: ['id'],
+            }, {
+                model: User,
+                as: 'Followers',
+                attributes: ['id'],
+            }]
+        })
+        if (fullUserWithoutPassword) {
+            const data = fullUserWithoutPassword.toJSON();
+            data.Posts = data.Posts.length; //개인정보 침해 예방 차원 
+            data.Followings = data.Followings.length;
+            data.Followers = data.Followers.length;
+            res.status(200).json(data);
+        } else {
+            res.status(404).json('존재하지 않는 사용자입니다.');
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
 
 //POST /user/login
 router.post('/login', isNotLoggedIn, (req,res,next)=> { //미들웨어 확장
