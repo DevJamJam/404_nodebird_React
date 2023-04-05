@@ -32,7 +32,7 @@ const AppLayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item key="home"><Link href="/"><a>노드버드</a></Link></Menu.Item>
         <Menu.Item key="profile"><Link href="/profile"><a>프로필</a></Link></Menu.Item>
-        <Menu.Item key="mail"><SearchWrapper enterButton /></Menu.Item>
+        <Menu.Item key="search"><SearchWrapper enterButton /></Menu.Item>
         <Menu.Item key="signup"><Link href="/signup"><a>회원가입</a></Link></Menu.Item>
       </Menu>
       <Row gutter={8}>

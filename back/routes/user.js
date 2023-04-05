@@ -39,6 +39,40 @@ router.get('/', async(req,res,next)=> { //GET /user
     }
 });
 
+router.get('/followers', isLoggedIn, async(req,res,next)=> { //GET /user/followers
+    try{
+        const user = await User.findOne({ where: {id : req.user.id }});
+        if (!user) {
+            return res.status(403).send('아무도 없는데 누굴 찾으시려고요 ..? ');
+        }
+        const followers = await user.getFollowers({
+            attributes: ['id', 'nickname'],
+            limit: parseInt(req.query.limit, 10),
+        });
+        res.status(200).json(followers)
+    } catch(error) {
+        console.log(error);
+        next(error);
+    }
+});
+
+router.get('/followings', isLoggedIn, async(req,res,next)=> { //GET /user/followings
+    try{
+        const user = await User.findOne({ where: {id : req.user.id }});
+        if (!user) {
+            return res.status(403).send('아무도 없는데 누굴 찾으시려고요 ..? ');
+        }
+        const followings = await user.getFollowings({
+            attributes: ['id', 'nickname'],
+            limit: parseInt(req.query.limit, 10),
+        });
+        res.status(200).json(followings)
+    } catch(error) {
+        console.log(error);
+        next(error);
+    }
+});
+
 router.get('/:userId', async(req,res,next)=> { //GET /user/id
     console.log(req.params.userId);
     try {
@@ -247,34 +281,5 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { // DE
         next(error);
     }
 });
-
-router.get('/followers', isLoggedIn, async(req,res,next)=> { //GET /user/followers
-    try{
-        const user = await User.findOne({ where: {id : req.user.id }});
-        if (!user) {
-            return res.status(403).send('아무도 없는데 누굴 찾으시려고요 ..? ');
-        }
-        const followers = await user.getFollowers();
-        res.status(200).json(followers)
-    } catch(error) {
-        console.log(error);
-        next(error);
-    }
-});
-
-router.get('/followings', isLoggedIn, async(req,res,next)=> { //GET /user/followings
-    try{
-        const user = await User.findOne({ where: {id : req.user.id }});
-        if (!user) {
-            return res.status(403).send('아무도 없는데 누굴 찾으시려고요 ..? ');
-        }
-        const followings = await user.getFollowings();
-        res.status(200).json(followings)
-    } catch(error) {
-        console.log(error);
-        next(error);
-    }
-});
-
 
 module.exports = router;
