@@ -213,7 +213,7 @@ router.post('/:postId/retweet', isLoggedIn, async(req,res,next)=> { //주소 부
             },{
                 model: User,
                 as: 'Likers',
-                attributes: [id],
+                attributes: ['id'],
             }],
         })
         res.status(201).json(retweetWithPrevPost);

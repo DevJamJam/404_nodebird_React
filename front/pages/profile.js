@@ -23,6 +23,7 @@ const Profile = () => {
   //SWR 도 hook이다. 
   const { data: followingsData, error: followingError } = useSWR(`http://localhost:3065/user/followings?limit=${followingsLimit}`, fetcher);
   const { data: followersData, error: followerError } = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`, fetcher);
+  
   useEffect(()=> {
     if (!(me && me.id)) {
       Router.push('/');
@@ -54,8 +55,8 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingError && !followingsData} />
-        <FollowList header="팔로워" data={followersData} onClickMore={loadMoreFollowers} loading={!followerError && !followersData} />
+        <FollowList header="팔로잉" data={followingsData || []} onClickMore={loadMoreFollowings} loading={!followingError && !followingsData} />
+        <FollowList header="팔로워" data={followersData || []} onClickMore={loadMoreFollowers} loading={!followerError && !followersData} />
       </AppLayout>
     </>
   );

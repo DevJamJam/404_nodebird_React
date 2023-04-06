@@ -39,22 +39,26 @@ const User = () => {
 
     return (
         <AppLayout>
-            <Head>
-                <title>
-                {userInfo.nickname} 님의 글
-                </title>
-                <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
-                <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
-                <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-                <meta property="og:image" content="https://nodebird.com/favicon.ico" />
-                <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
-            </Head>
+            {
+                userInfo && (
+                    <Head>
+                        <title>
+                            {userInfo.nickname} 님의 글
+                        </title>
+                        <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
+                        <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
+                        <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
+                        <meta property="og:image" content="https://nodebird.com/favicon.ico" />
+                        <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
+                    </Head>
+                )
+            }
             {userInfo
                 ? (
                     <Card
                         actions={[
                         <div key="twit">
-                            짹짹
+                            꽥꽥
                             <br />
                             {userInfo.Posts}
                         </div>,
@@ -103,8 +107,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     });
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
-    console.log('getState', context.store.getState().post.mainPosts);
-    return { props: {} };
 });
 
 export default User;

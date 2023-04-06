@@ -9,6 +9,10 @@ import PostCardContent from './PostCardContent';
 import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 import Swal from 'sweetalert2';
+import Link from 'next/link';
+import moment from 'moment';
+
+moment.locale('ko');
 
 const PostCard = ({post}) => {
     const id = useSelector((state)=> state.user.me?.id); //옵셔널체이닝 연산자
@@ -74,17 +78,18 @@ const PostCard = ({post}) => {
                     <MessageOutlined key="content" onClick={onToggleComment} />,
                     <Popover key="more" content={(
                         <Button.Group>
-                            { id && post.User.id === id ? (
-                                <>
-                                    <Button>수정</Button>
-                                    <Button 
-                                        type="danger" 
-                                        onClick={onRemovePost}
-                                        loading={removePostLoading}
-                                    >삭제</Button>
-                                </>
-                            ) : 
-                            <Button>신고</Button>}
+                            { id && post.User.id === id 
+                                ? (
+                                    <>
+                                        <Button>수정</Button>
+                                        <Button 
+                                            type="danger" 
+                                            onClick={onRemovePost}
+                                            loading={removePostLoading}
+                                        >삭제</Button>
+                                    </>
+                                ) 
+                                : <Button>신고</Button>}
                         </Button.Group>
                     )}>
                         <EllipsisOutlined />
@@ -97,21 +102,31 @@ const PostCard = ({post}) => {
                 {post.RetweetId && post.Retweet
                 ? (
                     <Card
-                    cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
+                        cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
                     >
-                    <Card.Meta
-                        avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
-                        title={post.Retweet.User.nickname}
-                        description={<PostCardContent postData={post.Retweet.content} />}
-                    />
+                        <div style={{ float: 'right' }}>{moment(post.createdAt).fromNow()}</div>
+                        <Card.Meta
+                            avatar={(
+                                <Link href={`/user/${post.Retweet.User.id}`}>
+                                    <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
+                                </Link>)}
+                            title={post.Retweet.User.nickname}
+                            description={<PostCardContent postData={post.Retweet.content} />}
+                        />
                     </Card>
                 )
                 : (
-                    <Card.Meta
-                    avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-                    title={post.User.nickname}
-                    description={<PostCardContent postData={post.content} />}
-                    />
+                    <>
+                        <div style={{ float: 'right' }}>{moment(post.createdAt).fromNow()}</div>
+                        <Card.Meta
+                        avatar={(
+                            <Link href={`/user/${post.User.id}`}>
+                                <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                            </Link>)}
+                        title={post.User.nickname}
+                        description={<PostCardContent postData={post.content} />}
+                        />
+                    </>
                 )}
             </Card>
             {commentFormOpened && (
@@ -125,15 +140,16 @@ const PostCard = ({post}) => {
                             <li>
                                 <Comment
                                     author={item.User.nickname}
-                                    avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                                    avatar={(
+                                        <Link href={`/user/${item.User.id}`}>
+                                            <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
+                                        </Link>)}
                                     content={item.content}
                                 />
                             </li>
                         )}
                     />
                 </div>)}
-            {/* <CommentForm />
-            <Comments /> */}
         </div>
     )
 }

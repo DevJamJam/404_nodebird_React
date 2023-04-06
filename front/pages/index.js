@@ -18,7 +18,7 @@ const Home = () => { //프론트 ,브라우저 둘 다 실행되는부분
 
   useEffect(()=> { //PostCard.js 에 넣으면 게시글 횟수만큼 리렌더링 되므로 여기다가 넣어준다. 
     if (retweetError) {
-      return Swal.fire({ icon: 'error', title: 'Error', text: retweetError ,});
+      Swal.fire({ icon: 'error', title: 'Error', text: retweetError ,});
     }
   },[retweetError]);
 
