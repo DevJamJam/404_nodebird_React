@@ -1,12 +1,12 @@
 import { RetweetOutlined,HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import { Avatar, Button, Card, Comment, List, Popover } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, RETWEET_REQUEST, UNLIKE_POST_REQUEST, UPDATE_POST_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
@@ -20,7 +20,25 @@ const PostCard = ({post}) => {
     const dispatch = useDispatch();
 
     const [commentFormOpened, setCommentFormOpened] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
+    const onClickModify = useCallback(()=> {
+        setEditMode(true);
+    },[]);
+
+    const onCancelModify = useCallback(()=> {
+        setEditMode(false);
+    },[]);
+
+    const onModifyPost = useCallback((modifyText)=>()=> {
+        dispatch({
+            type: UPDATE_POST_REQUEST,
+            data: {
+                PostId: post.id,
+                content: modifyText,
+            }
+        })
+    },[post]);
 
     const onRemovePost = useCallback(()=> {
         if (!id) {
@@ -81,7 +99,7 @@ const PostCard = ({post}) => {
                             { id && post.User.id === id 
                                 ? (
                                     <>
-                                        <Button>수정</Button>
+                                        {!post.RetweetId && <Button onClick={onClickModify}>수정</Button>}
                                         <Button 
                                             type="danger" 
                                             onClick={onRemovePost}
@@ -111,7 +129,7 @@ const PostCard = ({post}) => {
                                     <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
                                 </Link>)}
                             title={post.Retweet.User.nickname}
-                            description={<PostCardContent postData={post.Retweet.content} />}
+                            description={<PostCardContent onCancelModify={onCancelModify} onModifyPost={onModifyPost} postData={post.Retweet.content} />}
                         />
                     </Card>
                 )
@@ -124,7 +142,7 @@ const PostCard = ({post}) => {
                                 <a><Avatar>{post.User.nickname[0]}</Avatar></a>
                             </Link>)}
                         title={post.User.nickname}
-                        description={<PostCardContent postData={post.content} />}
+                        description={<PostCardContent editMode={editMode} onModifyPost={onModifyPost} onCancelModify={onCancelModify} postData={post.content} />}
                         />
                     </>
                 )}
