@@ -204,5 +204,10 @@ sketch
 .history
 .ionide
 
+react-nodebird.pem
+node_modules
+.next
+.env
+
 # End of https://www.toptal.com/developers/gitignore/api/nextjs,node,react,visualstudiocode
 
