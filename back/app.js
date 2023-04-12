@@ -30,20 +30,19 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('combined'));
     app.use(hpp());
     app.use(helmet());
+    app.use(cors({
+        origin: ['http://gongsabird.site'], //모든 출처 허용 옵션 , Access-Control-Allow-Origin 
+        // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
+        credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션 ,Access-Control-Allow-Credentials
+    })); // CORS해결 
 } else {
     app.use(morgan('dev'));
+    app.use(cors({
+        origin: ['http://localhost:3025'], //모든 출처 허용 옵션 , Access-Control-Allow-Origin 
+        // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
+        credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션 ,Access-Control-Allow-Credentials
+    })); // CORS해결 
 }
-app.use(cors({
-    origin: ['http://localhost:3025','http://gongsabird.site'], //모든 출처 허용 옵션 , Access-Control-Allow-Origin 
-    // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
-    credentials: true,  //다른 도메인 간에 쿠키 공유를 허락하는 옵션 ,Access-Control-Allow-Credentials
-    cookie: {
-        httpOnly: true,
-        secure: false,
-        domain: process.env.NODE_ENV === 'production' && '.gongsabird.site'
-    }
-})); // CORS해결 
-
 app.use('/',express.static(path.join(__dirname, 'uploads'))); 
 app.use(express.json()); // json data넘어 올때 처리
 app.use(express.urlencoded({ extended: true })); //form submit해서 넘어올때 처리
@@ -55,6 +54,11 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: process.env.NODE_ENV === 'production' && '.gongsabird.site'
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
