@@ -95,18 +95,14 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 */
 
 // action creator
-export const loginRequestAction = (data) => {
-    return {
+export const loginRequestAction = (data) => ({
         type: LOG_IN_REQUEST,
         data,
-    }
-}
+})
 
-export const logoutRequestAction = () => {
-    return {
+export const logoutRequestAction = () => ({
         type: LOG_OUT_REQUEST,
-    }
-}
+})
 
 //이전 state, action을 받아서 다음 state를 돌려주는 함수 
 const reducer = (state= initialState, action) => produce(state, (draft)=> {
