@@ -84,7 +84,7 @@ router.post('/', isLoggedIn, upload.none(), async (req,res,next)=>{  // await붙
 router.post('/images', isLoggedIn, upload.array('image'), async(req,res,next)=> {
     //이미지 업로드 후 실행되는구간 
     console.log(req.files);
-    res.json(req.files.map((v)=>v.location));
+    res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
 });
 
 router.get('/:postId', async(req,res,next)=> { //주소 부분에서 동적으로 바뀌는 부분 파라미터

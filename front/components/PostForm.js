@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPost, ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import { ADD_POST_REQUEST, REMOVE_IMAGE, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
 import Swal from 'sweetalert2';
 
@@ -73,7 +73,7 @@ const PostForm = () => {
                 {imagePaths.map((v , i) => {
                     return (
                         <div key={v} style={{ display: 'inline-block' }}>
-                            <img src={v} style={{ width: '200px' }} alt={v} />
+                            <img src={v.replace(/\/thumb\//, '/original/')} style={{ width: '200px' }} alt={v} />
                             <div>
                                 <Button onClick={onRemoveImage(i)}>제거</Button> 
                             </div>
