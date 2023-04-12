@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer'); //이미지 업로드를 위한 미들웨어
 const path = require('path');
 const fs = require('fs'); //파일시스템 조작
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 const {Post , Comment, Image, User, Hashtag} = require('../models');
 const {isLoggedIn} = require('./middlewares');
@@ -14,15 +16,17 @@ try {
     fs.mkdirSync('uploads'); //없으면 생성
 }
 
+AWS.config.update({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: 'ap-northeast-2',
+})
 const upload = multer({
-    storage: multer.diskStorage({
-        destination(req,file,done) {
-            done(null, 'uploads');
-        },
-        filename(req,file, done) { //사공사.png
-            const ext = path.extname(file.originalname); //확장자 추출(.png)
-            const basename = path.basename(file.originalname, ext) //사공사
-            done(null, basename + '_'+ new Date().getTime() + ext) //파일이름 + 시간 + 확장자
+    storage: multerS3({
+        s3: new AWS.S3(),
+        bucket: 'gongsabird',
+        key(req, file, cb) {
+            cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
         }
     }),
     limits: { fileSize: 20 * 1024 * 1024 }, //20MB
@@ -80,7 +84,7 @@ router.post('/', isLoggedIn, upload.none(), async (req,res,next)=>{  // await붙
 router.post('/images', isLoggedIn, upload.array('image'), async(req,res,next)=> {
     //이미지 업로드 후 실행되는구간 
     console.log(req.files);
-    res.json(req.files.map((v)=>v.filename));
+    res.json(req.files.map((v)=>v.location));
 });
 
 router.get('/:postId', async(req,res,next)=> { //주소 부분에서 동적으로 바뀌는 부분 파라미터
