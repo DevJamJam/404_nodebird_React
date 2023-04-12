@@ -1,1 +1,1 @@
-export const backUrl = 'http://3.36.71.34';
+export const backUrl = 'http://api.gongsabird.site';
