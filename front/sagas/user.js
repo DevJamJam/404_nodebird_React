@@ -1,4 +1,4 @@
-import {all, call, delay, fork, put, takeLatest} from 'redux-saga/effects'
+import {all, call, fork, put, takeLatest} from 'redux-saga/effects'
 import axios from 'axios';
 import { 
   CHANGE_NICKNAME_FAILURE,
@@ -40,9 +40,9 @@ function loadMyInfoAPI() {
   return axios.get('/user');
 }
 
-function* loadMyInfo(action) {
+function* loadMyInfo() {
   try {
-    const result = yield call(loadMyInfoAPI, action.data);
+    const result = yield call(loadMyInfoAPI);
     yield put({
       type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
