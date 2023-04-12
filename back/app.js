@@ -23,13 +23,12 @@ db.sequelize.sync()
         console.log('db연결 성공');
     })
     .catch(console.error);
-
 passportConfig();
 
 if (process.env.NODE_ENV === 'production') {
     app.use(morgan('combined'));
     app.use(hpp());
-    app.use(helmet());
+    app.use(helmet({ contentSecurityPolicy: false }));
     app.use(cors({
         origin: 'http://gongsabird.site', //모든 출처 허용 옵션 , Access-Control-Allow-Origin 
         // 쿠키공유까지 허락 되었을 때는 true or '*'로 사용할 수 없다. 민감한 정보보내니 정확한 주소 줘야한다..! 
