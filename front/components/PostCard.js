@@ -15,6 +15,7 @@ import moment from 'moment';
 moment.locale('ko');
 
 const PostCard = ({post}) => {
+    console.log(post);
     const id = useSelector((state)=> state.user.me?.id); //옵셔널체이닝 연산자
     const {removePostLoading } = useSelector((state)=>state.post);
     const dispatch = useDispatch();
@@ -159,15 +160,17 @@ const PostCard = ({post}) => {
                                 <Comment
                                     author={item.User.nickname}
                                     avatar={(
-                                        <Link href={`/user/${item.User.id}`}>
-                                            <a><Avatar>{post.Retweet.User.nickname[0]}</Avatar></a>
-                                        </Link>)}
+                                        <Link href={`/user/${item.User.id}`} prefetch={false}>
+                                            <a><Avatar>{item.User.nickname[0]}</Avatar></a>
+                                        </Link>
+                                    )}
                                     content={item.content}
                                 />
                             </li>
                         )}
                     />
-                </div>)}
+                </div>
+            )}
         </div>
     )
 }
