@@ -253,8 +253,6 @@ const reducer = (state= initialState, action) => produce(state, (draft)=> {
         case ADD_COMMENT_SUCCESS: 
             // action.data.content , postId,userId 사가에서 전달받아온다.\
             const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-            console.log(action.data);
-            debugger;
             post.Comments.unshift(action.data)
             draft.addCommentLoading = false;
             draft.addCommentDone = true;
