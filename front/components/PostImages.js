@@ -27,7 +27,7 @@ const PostImages = ({ images }) => {
         return(
             <>
                 <img role="presentation" style={{width: '50%', display: 'inline-block'}} src={`${images[0].src.replace(/\/thumb\//, '/original/')}`} alt={images[0].src} onClick={onZoom} />
-                <img role="presentation" style={{width: '50%', display: 'inline-block' }} src={`${images[1].src}`}alt={images[1].src.replace(/\/thumb\//, '/original/')} onClick={onZoom} />
+                <img role="presentation" style={{width: '50%', display: 'inline-block' }} src={`${images[1].src.replace(/\/thumb\//, '/original/')}`}alt={images[1].src.replace(/\/thumb\//, '/original/')} onClick={onZoom} />
                 {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
             </>
         )
