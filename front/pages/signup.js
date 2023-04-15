@@ -80,7 +80,7 @@ const Signup = () => {
     <>
       <AppLayout>
         <Head>
-          <title>회원가입 | NodeBird</title>
+          <title>회원가입 | GongsaBird</title>
         </Head>
         <Form onFinish={onSubmit}>
           <div>
@@ -125,10 +125,10 @@ const Signup = () => {
           </div>
           <div>
             <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
-              사공사를 전적으로 믿으셔야 합니다.
+              사공사의 공사버드에 가입하시는 것을 동의 하십니까?
             </Checkbox>
             {termError && (
-              <ErrorMessage>저를 전적으로 믿으셔야 합니다</ErrorMessage>
+              <ErrorMessage>동의하지 않으면 가입할 수 없어요</ErrorMessage>
             )}
           </div>
           <div style={{ marginTop: 10 }}>

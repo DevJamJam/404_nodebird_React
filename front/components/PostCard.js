@@ -15,7 +15,6 @@ import moment from 'moment';
 moment.locale('ko');
 
 const PostCard = ({post}) => {
-    console.log(post);
     const id = useSelector((state)=> state.user.me?.id); //옵셔널체이닝 연산자
     const {removePostLoading } = useSelector((state)=>state.post);
     const dispatch = useDispatch();

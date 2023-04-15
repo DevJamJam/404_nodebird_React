@@ -147,7 +147,6 @@ function retweetAPI(data) {
 
 function* retweet(action) {
   try {
-    console.log(action.data);
     const result = yield call(retweetAPI, action.data);
     yield put({
       type: RETWEET_SUCCESS,

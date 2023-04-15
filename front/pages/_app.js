@@ -11,7 +11,7 @@ const NodeBird = ({ Component }) => {
     <>
       <Head>
         <meta charSet="UTF-8" />
-        <title>NodeBird</title>
+        <title>GongsaBird</title>
         <link rel='icon' href='/sagongsa_bird.png'/>
       </Head>
       <Component />

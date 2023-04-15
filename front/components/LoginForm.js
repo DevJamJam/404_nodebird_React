@@ -33,7 +33,6 @@ const LoginForm = () => {
   },[logInError])
 
   const onSubmitForm = useCallback(() => {
-    console.log(email, password);
     dispatch(loginRequestAction({email,password}));
   }, [email, password]);
 
@@ -60,9 +59,7 @@ const LoginForm = () => {
           로그인
         </Button>
         <Link href="/signup">
-          <a>
-            <Button>회원가입</Button>
-          </a>
+          <a><Button>회원가입</Button></a>
         </Link>
       </ButtonWrapper>
       <div></div>

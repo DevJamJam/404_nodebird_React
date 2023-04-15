@@ -18,6 +18,7 @@ const PostForm = () => {
     },[addPostDone]);
 
     const onSubmit = useCallback(()=> {
+        console.log(imagePaths);
         if (!text || !text.trim()) {
             return  Swal.fire({ icon: 'error', title: 'Error!', text: "게시글을 작성해주세요!",});
         }
@@ -33,7 +34,6 @@ const PostForm = () => {
     },[text,imagePaths]);
 
     const onChangeImages = useCallback((e)=> {
-        console.log('images', e.target.files);
         const imageFormData = new FormData();
         [].forEach.call(e.target.files, (f)=> {
             imageFormData.append('image', f);
