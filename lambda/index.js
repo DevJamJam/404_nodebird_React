@@ -3,10 +3,10 @@ const sharp = require('sharp');
 
 const s3 = new AWS.S3();
 
-exports.lambdaHandler = async (event,context, callback) => {
+exports.lambdaHandler = async (event, context, callback) => {
     const Bucket = event.Records[0].s3.bucket.name //gongsabird
     const Key = decodeURIComponent(event.Records[0].s3.object.key); // original/coke_jam.jpg
-    console.log(Bucket, key); 
+    console.log(Bucket, Key); 
     const filename = Key.split('/')[Key.split('/').length -1];
     const ext = Key.split('.')[Key.split('.').length -1].toLowerCase();
     const requiredFormat = ext === 'jpg' ? 'jpeg' : ext;
