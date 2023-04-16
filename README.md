@@ -7,8 +7,9 @@
 ####  Twitter 기능 구현 해보기  
 ####  [리액트 & 넥스트 & 리덕스 & 리덕스사가 & 익스프레스 사용]
 ####  Next & React 사용 경험 및 숙련도 향상 및 SSR 구현 경험을 위해 작업 
+####  ORM(sequelize)사용하여 MYSQL 작업 
 ####  Node사용 서버 구현 
-#### AWS배포 ( S3, Lambda, EC2 ) 
+####  AWS배포 ( S3, Lambda, EC2 ) 
 
 
 
