@@ -1,1 +1,1 @@
-export const backUrl = 'http://api.gongsabird.site';
+export const backUrl ='https://api.gongsabird.site' ;
