@@ -21,9 +21,20 @@ const Global = createGlobalStyle`
 
   .ant-col:first-child {
     padding-left: 0 !important;
+    margin-top: 10px !important;
   }
   .ant-col:last-child {
     padding-right: 0 !improtant;
+    margin-top: 10px !important;
+  }
+  .ant-avatar {
+    background-color: #00BFFF !important;
+  }
+  .ant-menu-item a {
+    color: white !important;
+  }
+  .ant-menu {
+    background-color: #00BFFF !important;
   }
 `
 const AppLayout = ({ children }) => {
@@ -38,7 +49,7 @@ const AppLayout = ({ children }) => {
     <div>
       <Global />
       <Menu mode="horizontal">
-        <Menu.Item key="home"><Link href="/"><a>노드버드</a></Link></Menu.Item>
+        <Menu.Item key="home"><Link href="/"><a>공사버드</a></Link></Menu.Item>
         <Menu.Item key="profile"><Link href="/profile"><a>프로필</a></Link></Menu.Item>
         <Menu.Item key="search">
           <SearchWrapper 
