@@ -1,6 +1,6 @@
 # 🌟 React로 트위터 구현해보기 (부제 : gongsabird) 
 
-#### [배포링크](https://gongsabird.site)
+
 
 #### 📘 프로젝트 소개 :  
 #### 트위터의 기능을 실제로 구현하여 트위터 만들기  (Hashtag , Image업로드, 좋아요, 팔로잉 댓글 등 구현 ) 
